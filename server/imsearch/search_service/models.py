@@ -8,6 +8,7 @@ class Image(models.Model):
 class Label(models.Model):
     label_id = models.CharField(max_length=100,unique=True, primary_key= True, blank=False)
     label_name = models.CharField(max_length=155, unique=False, blank=False)
+    embedding = models.TextField(blank=True, default="[]")
 
 class ImageLabels(models.Model):
     image_id = models.ForeignKey(Image, on_delete=models.CASCADE)

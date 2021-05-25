@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 django = "*"
+sentence-transformers = "*"
+scipy = "*"
 
 [dev-packages]
 
