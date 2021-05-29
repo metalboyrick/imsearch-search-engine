@@ -4,6 +4,10 @@ from .apps import SearchServiceConfig
 from scipy.spatial import distance
 from sentence_transformers import util
 import json
+import numpy as np
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize 
+  
 
 from .models import *
 
@@ -11,18 +15,33 @@ def get_message(msg_content, status_code):
     return {'message': msg_content}, status_code
 
 def compute_similarity(query):
-    query_embedding = SearchServiceConfig.sbert_model.encode(query)
-    
+    query_raw_tokens = query.split(" ")
+
+    stop_words = set(stopwords.words('english')) 
+
     # loop through all labels
     labels = Label.objects.all()
     results = []
     debug = []
+    token_embeddings = []
+
+    # remove the stopwords
+    query_tokens = [w for w in query_raw_tokens if not w in stop_words]
+
+    print(query_tokens)
+
+    for token in query_tokens:
+        token_embeddings.append(SearchServiceConfig.sbert_model.encode(token))
+
+    np_embeddings = np.array(token_embeddings)
+    central_embedding = np_embeddings.mean(axis=0)
+    
     for label in labels:
         label_embedding = json.loads(label.embedding)
-        similarity = util.cos_sim(query_embedding, label_embedding)
-        if similarity >= 0.40:
+        similarity = util.cos_sim(central_embedding , label_embedding)
+        if similarity >= 0.475:
             results.append(label.label_id)
-            debug.append(label.label_name)
+            debug.append(label.label_name  + " " + str(similarity))
 
 
     print(debug)
