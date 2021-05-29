@@ -40,7 +40,12 @@ def compute_similarity(query):
         label_embedding = json.loads(label.embedding)
         similarity = util.cos_sim(central_embedding , label_embedding)
         if similarity >= 0.475:
-            results.append(label.label_id)
+            res_entry = {
+                'label_id': label.label_id,
+                'label_name': label.label_name,
+                'score': similarity[0].item()
+            }
+            results.append(res_entry)
             debug.append(label.label_name  + " " + str(similarity))
 
 
@@ -61,9 +66,11 @@ def search(request):
         search_query = request.GET["query"]
         similarities = compute_similarity(search_query)
 
+        # rank the results here
+
         # get the picture with the correct label from the database
         for value in similarities:
-            search_contents = ImageLabels.objects.filter(label_id= value)
+            search_contents = ImageLabels.objects.filter(label_id= value['label_id'])
             for image_labels in search_contents:
                 res_data.append(image_labels.image_id.image_path)
 
