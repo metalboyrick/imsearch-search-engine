@@ -7,7 +7,7 @@ import json
 import numpy as np
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize 
-  
+
 
 from .models import *
 
@@ -28,7 +28,6 @@ def compute_similarity(query):
     # remove the stopwords
     query_tokens = [w for w in query_raw_tokens if not w in stop_words]
 
-    print(query_tokens)
 
     for token in query_tokens:
         token_embeddings.append(SearchServiceConfig.sbert_model.encode(token))
@@ -48,9 +47,6 @@ def compute_similarity(query):
             results.append(res_entry)
             debug.append(label.label_name  + " " + str(similarity))
 
-
-    print(debug)
-    
     return results
 
 # Create your views here.
@@ -67,6 +63,7 @@ def search(request):
         similarities = compute_similarity(search_query)
 
         # rank the results here
+        similarities.sort(reverse=True, key=(lambda obj: obj['score']))
 
         # get the picture with the correct label from the database
         for value in similarities:
