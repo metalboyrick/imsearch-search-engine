@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 const App = () => {
   const classes = useStyles();
   const [input, setInput] = useState('')
+  const [imgData, setImgData] = useState([])
   
   const onSubmit = (e) => {
     e.preventDefault()
@@ -30,43 +31,20 @@ const App = () => {
       .then(res => {
         console.log(res);
         console.log(res.data);
+        setImgData(res.data)
       })
 
     setInput('')
   }
 
-  const tileData = [
-    {
-      img: 'images/1.jpg',
-      title: 'Image',
-      author: 'author',
-      cols: 2,
-    },
-    {
-      img: 'images/2.jpg',
-      title: 'Image',
-      author: 'author',
-      cols: 1,
-    },
-    {
-      img: 'images/3.jpg',
-      title: 'Image',
-      author: 'author',
-      cols: 3,
-    },
-    {
-      img: 'images/4.jpg',
-      title: 'Image',
-      author: 'author',
-      cols: 1,
-    },
-    {
-      img: 'images/5.jpg',
-      title: 'Image',
-      author: 'author',
-      cols: 2,
-    },
-  ]
+  const tileData = imgData.map(img => ({ 
+        img: `images/${img}`,
+        title: 'Image',
+        author: 'author',
+        cols: 1,
+     }))
+
+  
   
   return(
     <div>
@@ -80,9 +58,9 @@ const App = () => {
       <br />
       <div className={classes.root}>
         <GridList cellHeight={160} className={classes.gridList} cols={3}>
-          {tileData.map((tile) => (
-            <GridListTile key={tile.img} cols={tile.cols || 1}>
-              <img src={tile.img} alt={tile.title} />
+          {tileData.map((tile, index) => (
+            <GridListTile key={index} cols={tile.cols || 1}>
+              <img src={tile.img} alt={tile.title}/>
             </GridListTile>
           ))}
         </GridList>

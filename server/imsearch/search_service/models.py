@@ -13,8 +13,3 @@ class Label(models.Model):
 class ImageLabels(models.Model):
     image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
     label_id = models.ForeignKey(Label, on_delete=models.CASCADE)
-
-class ImageRelationship(models.Model):
-    label_id_1 = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='label_id_1')
-    label_id_2 = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='label_id_2')
-    rel_name = models.CharField(max_length=100,blank=False, unique=False)
