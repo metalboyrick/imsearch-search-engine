@@ -1,8 +1,12 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,8 +17,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   gridList: {
-    width: 500,
-    height: 450,
+      position: 'relative',
+      float: 'center',
+      width: '100%',
+      minHeight: '400px',
+      minWidth: '664px',
+      height: '100% !important'
   },
 }));
 
@@ -25,7 +33,7 @@ const App = () => {
   
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(input)
+    console.log("searching for: ", input)
 
     axios.get(`http://localhost:8000/search?query=${input}`,)
       .then(res => {
@@ -48,16 +56,20 @@ const App = () => {
   
   return(
     <div>
-      <form onSubmit={onSubmit}>
-        <label>
-          Search:
-          <input type="text" name="name" value={input} onChange={(e) => setInput(e.target.value)}/>
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+      <TextField
+        label="search input"
+        margin="normal"
+        variant="outlined"
+        InputProps={{type: 'search' }}
+        onChange={(e) => setInput(e.target.value)}
+        InputProps={{endAdornment: <Button variant="contained" color="secondary" onClick={onSubmit}>
+        enter
+      </Button>}}
+      />
+
       <br />
       <div className={classes.root}>
-        <GridList cellHeight={160} className={classes.gridList} cols={3}>
+        <GridList className={classes.gridList} cols={5}>
           {tileData.map((tile, index) => (
             <GridListTile key={index} cols={tile.cols || 1}>
               <img src={tile.img} alt={tile.title}/>
