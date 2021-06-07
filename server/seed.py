@@ -32,7 +32,7 @@ def populate_label(conn):
             label_id = split_line[0]
             label_name = split_line[1].replace("\n", "")
             cursor.execute(
-                f'insert into search_service_label values ("{label_id}", "{label_name}")')
+                f'insert into search_service_label values ("{label_id}", "{label_name}", "[]")')
             cursor.close()
 
     with open("./imsearch/data/attributes_descriptions.csv", "r", encoding="utf8") as f:
@@ -44,7 +44,7 @@ def populate_label(conn):
             label_id = split_line[0]
             label_name = split_line[1].replace("\n", "")
             cursor.execute(
-                f'insert into search_service_label values ("{label_id}", "{label_name}")')
+                f'insert into search_service_label values ("{label_id}", "{label_name}", "[]")')
             cursor.close()
 
 
@@ -68,21 +68,21 @@ def populate_image_labels(conn):
             count += 1
 
 
-def populate_image_relationships(conn):
+# def populate_image_relationships(conn):
 
-    with open("./imsearch/data/relationships.csv", "r", encoding="utf8") as f:
-        lines = f.readlines()
-        count = 1
-        for line in lines[1:]:
-            cursor = conn.cursor()
-            split_line = line.split(",")
-            label_1 = split_line[0]
-            label_2 = split_line[1]
-            relationship = split_line[2]
-            cursor.execute(
-                f'insert into search_service_imagerelationship values ({count},"{label_1}", "{label_2}", "{relationship}")')
-            cursor.close()
-            count += 1
+#     with open("./imsearch/data/relationships.csv", "r", encoding="utf8") as f:
+#         lines = f.readlines()
+#         count = 1
+#         for line in lines[1:]:
+#             cursor = conn.cursor()
+#             split_line = line.split(",")
+#             label_1 = split_line[0]
+#             label_2 = split_line[1]
+#             relationship = split_line[2]
+#             cursor.execute(
+#                 f'insert into search_service_imagerelationship values ({count},"{label_1}", "{label_2}", "{relationship}")')
+#             cursor.close()
+#             count += 1
 
 
 def populate_embed_value(conn):
@@ -122,9 +122,9 @@ def populate_embed_value(conn):
 def main():
     connection = sqlite3.connect('./imsearch/db.sqlite3')
     with connection:
-        # populate_image(connection)
-        # populate_label(connection)
-        # populate_image_labels(connection)
+        populate_image(connection)
+        populate_label(connection)
+        populate_image_labels(connection)
         # populate_image_relationships(connection)
         populate_embed_value(connection)
 

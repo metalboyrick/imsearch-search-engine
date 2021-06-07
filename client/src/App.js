@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -35,14 +34,20 @@ const App = () => {
     e.preventDefault()
     console.log("searching for: ", input)
 
-    axios.get(`http://localhost:8000/search?query=${input}`,)
+    setImgData([])
+    axios({
+      method: "GET",
+      url: `http://127.0.0.1:8000/search?query=${input}`
+    })
       .then(res => {
-        console.log(res);
-        console.log(res.data);
-        setImgData(res.data)
+        
+        // console.log(res);
+        // console.log(res.data);
+        setImgData(res.data.slice(0, 20))
+        setInput('')
       })
 
-    setInput('')
+    
   }
 
   const tileData = imgData.map(img => ({ 
@@ -52,7 +57,6 @@ const App = () => {
         cols: 1,
      }))
 
-  
   
   return(
     <div>
